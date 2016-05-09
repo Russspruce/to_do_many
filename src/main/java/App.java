@@ -93,6 +93,25 @@ public class App {
       response.redirect("/tasks/" + taskId);
       return null;
     });
+
+    get("/tasks/:id/edit", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      Task task = Task.find(Integer.parseInt(request.params("id")));
+      model.put("task", task);
+      model.put("allCategories", Category.all());
+      model.put("template", "templates/task-edit.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/tasks/:id/edit", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      Task task = Task.find(Integer.parseInt(request.params("id")));
+      String description = request.queryParams("description");
+      task.update(description);
+      String url = String.format("tasks/%d", task.getId());
+      response.redirect(url);
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
     //
     // post("/categories", (request, response) -> {
     //   Map<String, Object> model = new HashMap<String, Object>();

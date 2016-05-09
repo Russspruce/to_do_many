@@ -102,4 +102,17 @@ public class AppTest extends FluentTest {
     assertThat(pageSource()).contains("Household chores");
   }
 
+  @Test
+  public void taskUpdate() {
+    Category myCategory = new Category("Home");
+    myCategory.save();
+    Task myTask = new Task("Clean");
+    myTask.save();
+    String taskPath = String.format("http://localhost:4567/tasks/%d/edit", myTask.getId());
+    goTo(taskPath);
+    fill("#description").with("Dance");
+    submit("#update-task");
+    assertThat(pageSource()).contains("Dance");
+  }
+
 }
