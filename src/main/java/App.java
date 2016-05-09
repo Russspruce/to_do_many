@@ -52,8 +52,8 @@ public class App {
       String name = request.queryParams("name");
       Category newCategory = new Category(name);
       newCategory.save();
-      response,redirect("/categories");
-      return null
+      response.redirect("/categories");
+      return null;
     });
 
     get("/tasks/:id", (request, response) -> {
@@ -73,6 +73,26 @@ public class App {
       model.put("template", "templates/category.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+
+    post("/add_tasks", (request, response) -> {
+      int taskId = Integer.parseInt(request.queryParams("task_id"));
+      int categoryId = Integer. parseInt(request.queryParams("category_id"));
+      Category category = Category.find(categoryId);
+      Task task = Task.find(taskId);
+      category.addTask(task);
+      response.redirect("/categories/" + categoryId);
+      return null;
+    });
+
+    post("/add_categories", (request, response) -> {
+      int taskId = Integer.parseInt(request.queryParams("task_id"));
+      int categoryId = Integer.parseInt(request.queryParams("category_id"));
+      Category category = Category.find(categoryId);
+      Task task = Task.find(taskId);
+      task.addCategory(category);
+      response.redirect("/tasks/" + taskId);
+      return null;
+    });
     //
     // post("/categories", (request, response) -> {
     //   Map<String, Object> model = new HashMap<String, Object>();
