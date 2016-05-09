@@ -1,7 +1,10 @@
 <h1>All categories</h1>
 <ul>
   #foreach ($category in $categories)
-    <li><a href="/categories/$category.getId()">$category.getName()</a></li>
+    <li><a href="/categories/$category.getId()">$category.getName()</a>
+    <form class="" action="/categories/$category.getId()/delete" method="post">
+      <small><button type="submit" class="">Delete</button></small>
+    </form></li>
   #end
 </ul>
 

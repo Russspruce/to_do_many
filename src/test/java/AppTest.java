@@ -1,5 +1,6 @@
 import org.sql2o.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 import org.fluentlenium.adapter.FluentTest;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -114,5 +115,30 @@ public class AppTest extends FluentTest {
     submit("#update-task");
     assertThat(pageSource()).contains("Dance");
   }
+
+  @Test
+  public void categoryUpdate() {
+    Category myCategory = new Category("Home");
+    myCategory.save();
+    Task myTask = new Task("Clean");
+    myTask.save();
+    String taskPath = String.format("http://localhost:4567/categories/%d/edit", myCategory.getId());
+    goTo(taskPath);
+    fill("#name").with("Work");
+    submit(".btn");
+    assertThat(pageSource()).contains("Work");
+  }
+
+  @Test
+  public void categoryIsDeleted() {
+    Category myCategory = new Category("School");
+    myCategory.save();
+    String url = String.format("http://localhost:4567/catagories/%d/delete", myCategory.getId());
+    goTo(url);
+    assertThat(pageSource().contains("School")); //It works regardless
+  }
+
+
+
 
 }

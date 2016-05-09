@@ -108,10 +108,47 @@ public class App {
       Task task = Task.find(Integer.parseInt(request.params("id")));
       String description = request.queryParams("description");
       task.update(description);
-      String url = String.format("tasks/%d", task.getId());
+      String url = String.format("/tasks/%d", task.getId());
       response.redirect(url);
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+
+    get("/categories/:id/edit", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      Category category = Category.find(Integer.parseInt(request.params("id")));
+      model.put("category", category);
+      model.put("template", "templates/category-edit.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/categories/:id/edit", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      Category category = Category.find(Integer.parseInt(request.params("id")));
+      String name = request.queryParams("name");
+      category.update(name);
+      String url = String.format("/categories/%d", category.getId());
+      response.redirect(url);
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/categories/:id/delete", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      Category category = Category.find(Integer.parseInt(request.params("id")));
+      category.delete();
+      response.redirect("/categories");
+      return null;
+    });
+
+    post("tasks/:id/delete", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      Task task = Task.find(Integer.parseInt(request.params("id")));
+      task.delete();
+      response.redirect("/tasks");
+      return null;
+    });
+
+
+
     //
     // post("/categories", (request, response) -> {
     //   Map<String, Object> model = new HashMap<String, Object>();
